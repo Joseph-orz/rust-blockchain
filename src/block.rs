@@ -4,6 +4,7 @@ use crate::{ProofOfWork, Transaction};
 use crate::proof_of_work::ProofOfWork;
 use crate::transaction::Transaction;
 use serde::{Serialize, Deserialize};
+use sled::IVec;
 
 
 pub struct Block{
@@ -72,5 +73,14 @@ impl Block{
     pub fn generate_genesis_block(transaction: &Transaction)-> Block{
         let transactions = vec![transaction.clone()];
         return Block::new_block(String::from("None"), &transactions, 0);
+    }
+}
+
+impl from<block> for IVec{
+    fn from(b:Block) -> Self{
+        let bytes = bincode::serialize(&b).unwrap();
+        Self::from(bytes)
+
+        
     }
 }
